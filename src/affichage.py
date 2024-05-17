@@ -49,7 +49,7 @@ def afficher_image(chemin=""):
         graph = save_graph(G)
         chemin_image = fr"{graph}"
     else:
-        G = json_vers_nx(chemin)
+        
         chemin_image = save_graph(G)
         result_label.config(text=G)
     # chemin_image = r"""C:\Users\marqu\OneDrive\Images\2C8hCXfv2AAaO2S0CmsqmE.jpg""" # Appel de la fonction save_graph pour obtenir le chemin absolu de l'image
@@ -203,12 +203,14 @@ result_label.pack()
 
 
 def drop(event):
-    print('filepath')
-
-    filepath = event.data
-    # recuperer_cree_graph(filepath)
-    print(f"filepath{filepath}")
-    afficher_image(filepath)
+    global G
+    file_path = event.data
+    print(f"File path: {file_path}")# print('filepath')
+    G= json_vers_nx(file_path)
+    # filepath = event.data
+    # # recuperer_cree_graph(filepath)
+    # print(f"filepath{filepath}")
+    afficher_image(file_path)
 
 # Activer le drop sur le cadre d'image
 image_frame.drop_target_register(DND_FILES)

@@ -11,8 +11,13 @@ from collections import deque
 t_start = time.perf_counter()
 
 # LE BON
-def json_vers_nx(file_path, affiche=False):
-
+def json_vers_nx(file_path2, affiche=False):
+    # print("hfe")
+    print('file', file_path2)
+    file_path = file_path2.strip("{").strip("}")
+    # for eleme in file_path:
+    #     filepath = eleme
+    #     break
     G = nx.Graph()
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -28,11 +33,10 @@ def json_vers_nx(file_path, affiche=False):
             affichage_graph(G)
         return G
     except:
-
+        print("nsdfjd")
         return G
 
 
-  
 # affichage du graphe :
 def affichage_graph(graph_films):
     pos = nx.spring_layout(graph_films)
@@ -40,6 +44,7 @@ def affichage_graph(graph_films):
     nx.draw(graph_films, pos, with_labels=True)
     fig.savefig("G12.png")
     plt.show()
+
 
 def save_graph(graph_films):
     """Affiche le graphique passé en paramètre grâce à matplotlib et le sauvegarde sous forme d'image.
@@ -309,10 +314,12 @@ def centralite_groupe(G,S):
         return None
     return max([centralite(G,u) for u in S])
 
+import gzip
+
 def lesprints():
-    # fichier = './data/dataTests.txt'
-    fichier ="./data/data.txt"
-    graph_films = json_vers_nx(fichier, True)
+    fichier = './data/dataTests.txt'
+    # fichier ="./data/data.txt"
+    graph_films = json_vers_nx(fichier, False)
 # print(graph_films)
 # Afficher quelques informations sur le graphe
 # print("Nombre de nœuds (personnes) :", graph_films.number_of_nodes())
@@ -339,9 +346,9 @@ def lesprints():
     print("centralite:", centralite(graph_films,"Julian Marques") ) # 3
     print("centralite:", centralite(graph_films,"Goldie Hawn") ) # 3
     print("centralite:", centralite(graph_films,"Carol Kane") ) # 2
-    # # #Gcentre= graph_films
-    # arthus_sauce1 = arthus_sauce(graph_films)
-    # print("centre_hollywood:", centre_hollywood(graph_films,arthus_sauce1) ) 
+    # #Gcentre= graph_films
+    arthus_sauce1 = arthus_sauce(graph_films)
+    print("centre_hollywood:", centre_hollywood(graph_films,arthus_sauce1) ) 
 
     # print("eloignement_max:", eloignement_max(graph_films) )
     # print("eloignement_max:", arthus_sauce1 )
@@ -351,5 +358,5 @@ def lesprints():
     # print("time taken",time.perf_counter()-t_start,"s")
 
 # cProfile.run("lesprints()")
-# lesprints()
+lesprints()
 print("time taken",time.perf_counter()-t_start,"s")
