@@ -1,1 +1,3 @@
-__pycache__
+# Ignore compiled files
+*.pyc
+__pycache__/
