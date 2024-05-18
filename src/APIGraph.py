@@ -8,6 +8,8 @@ import time
 import cProfile
 from collections import deque
 
+
+
 t_start = time.perf_counter()
 
 # LE BON
@@ -302,8 +304,8 @@ def centre_hollywood(G,sauce):
 
     print(" depart ",depart,  " end ",end,  " distance ",distance)
     # ch = nx.algorithms.shortest_paths.dense.reconstruct_path( depart, end,G)
-    # ch =nx.algorithms.shortest_paths.generic.shortest_path(G,depart, end)
-    ch = cheminer(G,depart,end)
+    # ch =nx.algorithms.shor    test_paths.generic.shortest_path(G,depart, end)
+    ch = cheminer(G,depart)
 
     print("ch>>>>>",ch)
     return ch[len(ch) // 2]
@@ -324,38 +326,38 @@ def lesprints():
 # Afficher quelques informations sur le graphe
 # print("Nombre de nœuds (personnes) :", graph_films.number_of_nodes())
 # print("Nombre d'arêtes (relations) :", graph_films.number_of_edges())
-    # affichage_graph(graph_films)
+    affichage_graph(graph_films)
     # print(save_graph(graph_films))
     print(graph_films)
     
     # print(centre_hollywood(graph_films,eloignement_max(graph_films))) 
     
-    print("colab: ", collaborateurs_communs(graph_films, "Paul Reubens", "Julian Marques"))  # Output: {'Carol Kane'}
-    print("colab proche: ", collaborateurs_proches(graph_films,"Julian Marques",1))
-    print("colab proche: ", collaborateurs_proches(graph_films,"Julian Marques",2))
-    print("EST proche: ", est_proche(graph_films,"Julian Marques", "Anthony Michael Hall",1) )
-    print("EST proche: ", est_proche(graph_films,"Julian Marques", "Carol Kane",1))
-    print("distance_naive:", distance_naive(graph_films,"Julian Marques","Carol Kane") )
-    print("distance_naive:", distance_naive(graph_films,"Julian Marques","Julian Marques") )
-    print("distance_naive:", distance_naive(graph_films,"Julian Marques","Anthony Michael Hall") )
-    print("distance_naive:", distance_naive(graph_films,"Julian Marques","Goldie Hawn") )
-    print("distance:", distance(graph_films,"Julian Marques","Carol Kane") )
-    print("distance:", distance(graph_films,"Julian Marques","Julian Marques") )
-    print("distance:", distance(graph_films,"Julian Marques","Anthony Michael Hall") )
-    print("distance:", distance(graph_films,"Julian Marques","Goldie Hawn") )
-    print("centralite:", centralite(graph_films,"Julian Marques") ) # 3
-    print("centralite:", centralite(graph_films,"Goldie Hawn") ) # 3
-    print("centralite:", centralite(graph_films,"Carol Kane") ) # 2
-    # #Gcentre= graph_films
-    arthus_sauce1 = arthus_sauce(graph_films)
-    print("centre_hollywood:", centre_hollywood(graph_films,arthus_sauce1) ) 
+    # print("colab: ", collaborateurs_communs(graph_films, "Paul Reubens", "Julian Marques"))  # Output: {'Carol Kane'}
+    # print("colab proche: ", collaborateurs_proches(graph_films,"Julian Marques",1))
+    # print("colab proche: ", collaborateurs_proches(graph_films,"Julian Marques",2))
+    # print("EST proche: ", est_proche(graph_films,"Julian Marques", "Anthony Michael Hall",1) )
+    # print("EST proche: ", est_proche(graph_films,"Julian Marques", "Carol Kane",1))
+    # print("distance_naive:", distance_naive(graph_films,"Julian Marques","Carol Kane") )
+    # print("distance_naive:", distance_naive(graph_films,"Julian Marques","Julian Marques") )
+    # print("distance_naive:", distance_naive(graph_films,"Julian Marques","Anthony Michael Hall") )
+    # print("distance_naive:", distance_naive(graph_films,"Julian Marques","Goldie Hawn") )
+    # print("distance:", distance(graph_films,"Julian Marques","Carol Kane") )
+    # print("distance:", distance(graph_films,"Julian Marques","Julian Marques") )
+    # print("distance:", distance(graph_films,"Julian Marques","Anthony Michael Hall") )
+    # print("distance:", distance(graph_films,"Julian Marques","Goldie Hawn") )
+    # print("centralite:", centralite(graph_films,"Julian Marques") ) # 3
+    # print("centralite:", centralite(graph_films,"Goldie Hawn") ) # 3
+    # print("centralite:", centralite(graph_films,"Carol Kane") ) # 2
+    # # #Gcentre= graph_films
+    # arthus_sauce1 = arthus_sauce(graph_films)
+    # print("centre_hollywood:", centre_hollywood(graph_films,arthus_sauce1) ) 
 
-    # print("eloignement_max:", eloignement_max(graph_films) )
-    # print("eloignement_max:", arthus_sauce1 )
-    # liste = ["Carol Kane","Paul Reubens"]
-    # print("centralite_groupe:", centralite_groupe(graph_films,liste) )
+#     print("eloignement_max:", eloignement_max(graph_films) )
+#     print("eloignement_max:", arthus_sauce1 )
+#     liste = ["Carol Kane","Paul Reubens"]
+#     print("centralite_groupe:", centralite_groupe(graph_films,liste) )
 
-    # print("time taken",time.perf_counter()-t_start,"s")
+#     print("time taken",time.perf_counter()-t_start,"s")
 
 # cProfile.run("lesprints()")
 lesprints()

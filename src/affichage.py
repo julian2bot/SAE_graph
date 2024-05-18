@@ -121,10 +121,9 @@ def executer_distance():
     result = distance(G,actor1_data, actor2_data)
     # Afficher le résultat
     if result == -1:
-        res = f"Les acteurs {actor1_data} et {actor2_data} ne sont lié quelque soit la distance"
+        res = f"Les acteurs {actor1_data} et {actor2_data} ne sont pas lié quelque soit la distance"
     res= f"Les acteurs {actor1_data} et {actor2_data} sont separé d'une distance de {result}"
-
-
+    
     result_label.config(text=res)
 
 def executer_centralite():
@@ -143,7 +142,7 @@ def executer_centra_hollywood():
     # Exécuter la fonction avec les données fournies
     result = centre_hollywood(G, arthus_sauce(G))
     # Afficher le résultat
-    res= f"la centralité d'hollywood est dessigné a l'acteur {result} !"
+    res= f"La centralité d'hollywood est dessignée à l'acteur {result} !"
 
     result_label.config(text=res)
 
@@ -169,6 +168,7 @@ root = TkinterDnD.Tk()
 # root.geometry("400x200")
 
 root.title("Affichage d'une image dans un cadre")
+
 # Création de la barre de menu
 menubar = tk.Menu(root)
 file_menu = tk.Menu(menubar, tearoff=0)
@@ -206,7 +206,7 @@ def drop(event):
     global G
     file_path = event.data
     print(f"File path: {file_path}")# print('filepath')
-    G= json_vers_nx(file_path)
+    G = json_vers_nx(file_path)
     # filepath = event.data
     # # recuperer_cree_graph(filepath)
     # print(f"filepath{filepath}")
