@@ -15,6 +15,7 @@ from tkinter import filedialog
 #########################################
 #########################################
 G = nx.Graph()
+nb_ouverture = 0
 
 def on_closing():
     root.destroy()
@@ -39,11 +40,42 @@ def ouvrir_fichier():
     G = recuperer_cree_graph()
 
 
+from tkinter import messagebox
 
 def afficher_image(chemin=""):
-    global G
+    global G, nb_ouverture
+    if nb_ouverture == 0:
+        nb_ouverture +=1
+        if chemin=="":
+            graph = save_graph(G)
+            chemin_image = fr"{graph}"
+        else:
+            
+            chemin_image = save_graph(G)
+            result_label.config(text=G)
 
+        image = Image.open(chemin_image)
+        print(image)
+        photo = ImageTk.PhotoImage(image)
+
+        image_label.configure(image=photo)
+        image_label.image = photo  
+        return 
+    
     # FAIRE POP UP WARNING
+    # reponse = messagebox.askokcancel("Confirmation affichage Graph", "Cette opération peut prendre du temps \n(voir faire crash logiciel si les fichiers sont trop grand par rapport a l'affichage). Voulez-vous continuer?")
+    reponse = messagebox.askokcancel(
+        "Confirmation affichage Graph", 
+        "Cette opération peut prendre du temps. \n"
+        "(voir faire crash logiciel si les fichiers sont trop grands par rapport à l'affichage).\n\n"
+        "Voulez-vous continuer?"
+    )
+
+    if reponse:
+        result_label.config(text="Affichage du graph")
+    else:
+        result_label.config(text="Le graph n'est pas affiché mais vous pouvez tout de meme visualisé les données !")
+        return 
     if chemin=="":
         graph = save_graph(G)
         chemin_image = fr"{graph}"
