@@ -111,37 +111,43 @@ def executer_collaborateurs_communs():
 def executer_collaborateurs_proche():
     # Récupérer les données des champs texte actor1 et actor2
     actor1_data = actor1_entryproche.get()
-    k = int(distance_entryproche.get())
+   
     # Exécuter la fonction avec les données fournies
-    result = collaborateurs_proches(G,actor1_data, k)
+    try:
+        k = int(distance_entryproche.get())
+        result = collaborateurs_proches(G,actor1_data, k)
     # Afficher le résultat
     # print("colab: ", collaborateurs_communs(G, "Paul Reubens", "Julian Marques"))  # Output: {'Carol Kane'}
     # print("colab: ", collaborateurs_communs(G, str(actor1_data),str(actor2_data)))  # Output: {'Carol Kane'}
 
-    res= f"Acteurs proche de {actor1_data} a une distance de {k} est : {result}"
-
-
+        res= f"Acteurs proche de {actor1_data} a une distance de {k} est : {result}"
+    except:
+        res= f"Veuillez entrer une distance valide"
+    
     result_label.config(text=res)
 
 def executer_collaborateurs_estproche():
     # Récupérer les données des champs texte actor1 et actor2
     actor1_data = actor1_entry_estproche.get()
     actor2_data = actor2_entry_estproche.get()
-    k = int(distance_entry_estproche.get())
+
     # Exécuter la fonction avec les données fournies
-    result = est_proche(G,actor1_data,actor2_data, k)
-    # Afficher le résultat
-    # print("colab: ", collaborateurs_communs(G, "Paul Reubens", "Julian Marques"))  # Output: {'Carol Kane'}
-    print("colab: ", est_proche(G, str(actor1_data),str(actor2_data),k))  # Output: {'Carol Kane'}
+    try:
+        k = int(distance_entry_estproche.get())        
+        result = est_proche(G,actor1_data,actor2_data, k)
+        # Afficher le résultat
+        # print("colab: ", collaborateurs_communs(G, "Paul Reubens", "Julian Marques"))  # Output: {'Carol Kane'}
+        print("colab: ", est_proche(G, str(actor1_data),str(actor2_data),k))  # Output: {'Carol Kane'}
           
+
+        # if none => connais pas cette acteur
+        if result:
+            res= f"l'acteur {actor1_data} est proche de{actor2_data} (distance: {k})"
+        else:
+            res= f"l'acteur {actor1_data} est pas proche de {actor2_data} à une  distance de {k}"
+    except:
+        res= f"Veuillez entrer une distance valide"
     
-    # if none => connais pas cette acteur
-    if result:
-        res= f"l'acteur {actor1_data} est proche de{actor2_data} (distance: {k})"
-    else:
-        res= f"l'acteur {actor1_data} est pas proche de {actor2_data} à une  distance de {k}"
-
-
     result_label.config(text=res)
 
 def executer_distance():
@@ -149,12 +155,15 @@ def executer_distance():
     actor1_data = actor1_entry_distance.get()
     actor2_data = actor2_entry_distance.get()
     # Exécuter la fonction avec les données fournies
-    result = distance(G,actor1_data, actor2_data)
-    # Afficher le résultat
-    if result == -1:
-        res = f"Les acteurs {actor1_data} et {actor2_data} ne sont pas lié quelque soit la distance"
-    res= f"Les acteurs {actor1_data} et {actor2_data} sont separé d'une distance de {result}"
-    
+    try:
+        result = distance(G,actor1_data, actor2_data)
+        # Afficher le résultat
+        if result == -1:
+            res = f"Les acteurs {actor1_data} et {actor2_data} ne sont pas lié quelque soit la distance"
+        res= f"Les acteurs {actor1_data} et {actor2_data} sont separé d'une distance de {result}"
+    except:
+        res= f"Veuillez entrer une distance valide"
+            
     result_label.config(text=res)
 
 def executer_centralite():
@@ -170,24 +179,31 @@ def executer_centralite():
 
 def executer_centra_hollywood():
     global G
-    # Exécuter la fonction avec les données fournies
-    result = centre_hollywood(G, arthus_sauce(G))
-    # Afficher le résultat
-    res= f"La centralité d'hollywood est dessignée à l'acteur {result} !"
-
+    try:
+        # Exécuter la fonction avec les données fournies
+        result = centre_hollywood(G, arthus_sauce(G))
+        # Afficher le résultat
+        res= f"La centralité d'hollywood est dessignée à l'acteur {result} !"
+    except:
+        res= f"Problème, veuillez vérifier votre graph."
+    
     result_label.config(text=res)
 
 
 def executer_eloignement_max():
     global G
     # Exécuter la fonction avec les données fournies
-    result = eloignement_max(G)
     # Afficher le résultat
-    if result == None:
-        res = f"veuillez importer un graph"
-    else:
-        res= f"L'éloignement maximun dans le graph est entre l'acteur {result[0]} et {result[1]} qui sont séparé d'une distande de {result[2]}"
+    try: 
+        result = eloignement_max(G)
 
+        if result == None:
+            res = f"veuillez importer un graph"
+        else:
+            res= f"L'éloignement maximun dans le graph est entre l'acteur {result[0]} et {result[1]} qui sont séparé d'une distande de {result[2]}"
+    except:
+        res= f"Problème, veuillez vérifier votre graph."
+   
     result_label.config(text=res)
 
 from tkinterdnd2 import DND_FILES, TkinterDnD
