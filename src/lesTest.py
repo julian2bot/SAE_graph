@@ -1,4 +1,4 @@
-import APIGraph as API
+import requetes as API
 import networkx as nx
 graph_films = API.json_vers_nx("./data/dataTests.txt")
 

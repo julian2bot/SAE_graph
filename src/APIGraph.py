@@ -12,6 +12,35 @@ from collections import deque
 
 t_start = time.perf_counter()
 
+def txt_to_json(entre, sortie):
+    with open(entre, 'r', encoding='utf-8') as f:
+        data_list = []
+        for line in f:
+            data = json.loads(line)
+            data_list.append(data)
+
+    with open(sortie, 'w') as f:
+        json.dump(data_list, f, indent=4)
+
+    print("Fichier modifié avec succès!")
+
+def json_to_nx(chemin_vers_le_fichier_json):
+    G=nx.Graph()
+    with open(chemin_vers_le_fichier_json,"r") as f:
+        data=json.load(f)#liste de dictionnaire
+    for x in range(10):
+        dico=data[x]
+        cast = [actor.strip("[[").strip("]]") for actor in dico["cast"]]
+        for i, actor1 in enumerate(cast):
+            for actor2 in cast[i+1:]:
+                G.add_edge(actor1, actor2, film=dico["title"])
+    return G
+
+
+# txt_to_json("./data/data.txt","./data/dataa.json")
+# gdqs = json_to_nx("./data/dataa.json")
+
+# print(gdqs)
 # LE BON
 def json_vers_nx(file_path2, affiche=False):
     # print("hfe")
@@ -41,12 +70,14 @@ def json_vers_nx(file_path2, affiche=False):
 
 # affichage du graphe :
 def affichage_graph(graph_films):
-    pos = nx.spring_layout(graph_films)
-    fig = plt.figure()
-    nx.draw(graph_films, pos, with_labels=True)
-    fig.savefig("G12.png")
+    # pos = nx.spring_layout(graph_films)
+    # fig = plt.figure()
+    # nx.draw(graph_films, pos, with_labels=True)
+    # fig.savefig("G12.png")
+    # plt.show()
+    # nx.draw(graph_films, with_labels=True)
+    nx.draw(graph_films)
     plt.show()
-
 
 def save_graph(graph_films):
     """Affiche le graphique passé en paramètre grâce à matplotlib et le sauvegarde sous forme d'image.
@@ -162,13 +193,40 @@ def centralite(G, u):
     """
     if u not in G:
         return None
-    shortest_paths = nx.single_source_dijkstra_path_length(G, u)
-    centralite_u = max(shortest_paths.values())
-    return centralite_u
+    
+    # shortest_paths = nx.single_source_dijkstra_path_length(G, u)
+    # print("erokrz")
+    # bords = nx.dag_longest_path(G)  #=> sauce arthus
+    # print("bords", bords)
+    # return distance(G, bords[0],u ) if distance(G, bords[0],u ) < distance(G, bords[-1],u ) else distance(G, bords[-1],u )
+    # start_node = list(G.nodes())[0]
+    
+    # # Effectuer une première recherche en profondeur pour trouver le nœud le plus éloigné
+    # farthest_node = nx.algorithms.dag.dag_longest_path_length(G, start_   node)
+    
+    # # Effectuer une deuxième recherche en profondeur depuis le nœud le plus éloigné
+    # path = nx.algorithms.dag.dag_longest_path(G, farthest_node)
+
+    
+    # return distance(G, path[0],u ) if distance(G, path[0],u ) < distance(G, path[-1],u ) else distance(G, path[-1],u )
+
+    return nx.algorithms.dag.dag_longest_path_length(G, u)
+   
+    # print(shortest_paths)
+    # centralite_u = max(shortest_paths.values())
+
+    # return centralite_u
     # or
     # return max(nx.single_source_dijkstra_path_length(G, u).values())
 
+def centralite2(G,u):
+    shortest_paths = nx.single_source_dijkstra_path_length(G, u)
+    # print(shortest_paths)
+    centralite_u = max(shortest_paths.values())
 
+    return centralite_u
+    # or
+    # return max(nx.single_source_dijkstra_path_length(G, u).values())
 
 def bfs_max_distance(G, source):
     if source not in G:
@@ -188,13 +246,13 @@ def bfs_max_distance(G, source):
 
     return max_distance
 
-def eloignement_max(G):
-    max_distance = 0
-    for node in G.nodes():
-        distance_from_node = bfs_max_distance(G, node)
-        max_distance = max(max_distance, distance_from_node)
+# def eloignement_max(G):
+#     max_distance = 0
+#     for node in G.nodes():
+#         distance_from_node = bfs_max_distance(G, node)
+#         max_distance = max(max_distance, distance_from_node)
     
-    return max_distance
+#     return max_distance
 
 # def parcours_largeur(graphe, depart):
 #     if depart not in graphe:
@@ -255,6 +313,127 @@ def arthus_sauce(G):
 def eloignement_max(G):
     return arthus_sauce(G)
 
+def eloignement_max2(G):
+    max_distance = 0
+    
+    for node in G.nodes():
+        eccentricity = centralite2(G,node)    
+        if eccentricity > max_distance:
+            max_distance = eccentricity
+    
+    return max_distance
+
+# Graph= json_vers_nx("./data/hgsifs.txt", True)
+# Graph= json_vers_nx("./data/data_100.txt", True)
+# Graph= json_vers_nx("./data/data_1000.txt", True)
+# Graph= json_vers_nx("./data/data_vrai/data.txt", False)
+# Graph= json_vers_nx("./data/data_vrai/datasave.txt", True)
+# print("eloooignement 1",eloignement_max(Graph))
+# print("eloooignement 2",eloignement_max2(Graph))
+
+# def centre_bis(G,u):
+#     def val(elem):
+#         return len(elem[1])
+#     truc = max(nx.single_source_dijkstra_path(G,u).items(), key=val)
+
+#     # comm = collaborateurs_communs(G , u, truc)
+#     # while truc.values() in comm:
+#     #     truc = max(nx.single_source_dijkstra_path(G,u).items(), key=val)
+ 
+#     # print('disdsjf', nx.single_source_dijkstra_path(G,u))
+#     print("u to truc >>>>>",u,'vers', truc)
+#     print("dqs,jh fbqd",truc[1][0],truc[1][-1],len(truc[1])-1)
+#     return truc
+
+# def eloige_m(G):
+#     truc = list(G.nodes)
+
+#     depart = centre_bis(G,truc[1])[0]
+#     print("dep", depart)
+#     return centre_bis(G, depart), depart
+
+# print("eloooignement n°3",eloige_m(Graph))
+
+
+
+
+#######################################################
+
+def centre_bis(G,u):
+    def val(elem):
+        return len(elem[1])
+    truc = max(nx.single_source_dijkstra_path(G,u).items(), key=val)
+    print(truc)
+    return truc[1][0],truc[1][-1],len(truc[1])-1
+    # return V max, u, len btw u => v
+
+
+def eloige_m(G):
+    # truc = centre_bis(G, "Pupils at Shahid Masumi School")
+    # return centre_bis(G, truc[0])
+    return centre_bis(G, centre_bis(G, list(G.nodes)[0])[0])
+
+#######################################################
+
+Graph= json_vers_nx("./data/data_vrai/data.txt", False)
+
+print("eloooignement n°3",eloige_m(Graph))
+
+
+# def centralite_roux(G,u):
+#     if u not in G:
+#         return None
+#     ensemble = set(u)
+#     k = 0
+#     while len(ensemble) != len(G.nodes) : 
+#         k += 1
+#         for elt in ensemble:
+#             ensemble = ensemble|G.neighbors(elt)
+#     return k
+# def eloige_mroux(G):
+#     # truc = centre_bis(G, "Pupils at Shahid Masumi School")
+#     # return centre_bis(G, truc[0])
+#     return centralite_roux(G, centralite_roux(G, list(G.nodes)[0])[0])
+
+# print("eloooignement n°3",eloige_mroux(Graph))
+
+# liste = ["Carol Kane","Paul Reubens"]
+
+# def centralite_groupe2(G,S):
+#     for i in range(len(S)):
+#         if S[i] not in G:
+#             print(S[i])
+#             return None
+#     return max([centre_bis(G,u) for u in S])
+# print("centralite_groupe:", centralite_groupe2(Graph,liste) )
+
+# # chatgpt test
+
+# def centre_bis(G, u):
+#     shortest_paths = nx.single_source_dijkstra_path_length(G, u)
+#     v = max(shortest_paths, key=shortest_paths.get)
+#     distance = shortest_paths[v]
+#     return u, v, distance
+
+# def eloignement_maxchat(G):
+#     # Trouver un nœud arbitraire pour commencer
+#     arbitrary_node = list(G.nodes())[0]
+    
+#     # Utiliser centre_bis pour trouver le nœud le plus éloigné du nœud arbitraire
+#     _, farthest_node, _ = centre_bis(G, arbitrary_node)
+    
+#     # Utiliser centre_bis à nouveau pour trouver l'autre extrémité du plus long chemin
+#     _, opposite_node, max_distance = centre_bis(G, farthest_node)
+    
+#     return max_distance
+
+
+# print("eloooignement n°3",eloignement_maxchat(Graph))
+
+
+
+
+
 def cheminer(G,u,v):
     # return nx.dag_longest_path(G,u,v)
     """
@@ -300,15 +479,18 @@ def centre_hollywood(G,sauce):
     #     return None
 
     depart , end , distance = sauce
+    # # OR
+    # depart , end , distance = eloignement_max()
+
     # depart , end , distance = nx.algorithms.shortest_paths.generic.shortest_path(G,)
 
     print(" depart ",depart,  " end ",end,  " distance ",distance)
     # ch = nx.algorithms.shortest_paths.dense.reconstruct_path( depart, end,G)
     # ch =nx.algorithms.shor    test_paths.generic.shortest_path(G,depart, end)
-    ch = cheminer(G,depart)
+    ch = cheminer(G,depart, end)
 
     print("ch>>>>>",ch)
-    return ch[len(ch) // 2]
+    return ch[len(ch) // 2] # -> centraliter(centraliter()) 
 
 
 def centralite_groupe(G,S):
@@ -317,16 +499,25 @@ def centralite_groupe(G,S):
     return max([centralite(G,u) for u in S])
 
 import gzip
+def centre_hollywood_roux(G):
+    truc =  min(G.nodes, key = lambda n: centralite(G,n))
+    print('>>>>>',truc)
+    return truc
+
 
 def lesprints():
-    fichier = './data/dataTests.txt'
+    # fichier = './data/dataTests.txt'
+    fichier = './data/hgsifs.txt'
+    # fichier = './data/roux.txt'
+    
     # fichier ="./data/data.txt"
+    # fichier ="./data/data_100.txt"
     graph_films = json_vers_nx(fichier, False)
 # print(graph_films)
 # Afficher quelques informations sur le graphe
 # print("Nombre de nœuds (personnes) :", graph_films.number_of_nodes())
 # print("Nombre d'arêtes (relations) :", graph_films.number_of_edges())
-    affichage_graph(graph_films)
+    # affichage_graph(graph_films)
     # print(save_graph(graph_films))
     print(graph_films)
     
@@ -348,9 +539,12 @@ def lesprints():
     # print("centralite:", centralite(graph_films,"Julian Marques") ) # 3
     # print("centralite:", centralite(graph_films,"Goldie Hawn") ) # 3
     # print("centralite:", centralite(graph_films,"Carol Kane") ) # 2
-    # # #Gcentre= graph_films
+    # print("centralite:", centralite2(graph_films,"Carol Kane") ) # 2
+    # #Gcentre= graph_films
     # arthus_sauce1 = arthus_sauce(graph_films)
+    # print(arthus_sauce1)
     # print("centre_hollywood:", centre_hollywood(graph_films,arthus_sauce1) ) 
+    # print("centre_hollywood:", centre_hollywood_roux(graph_films) ) 
 
 #     print("eloignement_max:", eloignement_max(graph_films) )
 #     print("eloignement_max:", arthus_sauce1 )
@@ -360,5 +554,5 @@ def lesprints():
 #     print("time taken",time.perf_counter()-t_start,"s")
 
 # cProfile.run("lesprints()")
-lesprints()
+# lesprints()
 print("time taken",time.perf_counter()-t_start,"s")

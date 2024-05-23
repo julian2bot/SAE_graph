@@ -140,9 +140,6 @@ def centre_hollywood(G):
     print("ch>>>>>",ch)
     return ch[1][len(ch[1]) // 2] # -> centraliter(centraliter()) 
 
-Gr = json_vers_nx("data/data.txt")
-print(centre_hollywood(Gr))
-
 # Q5
 def eloignement_max(G):
     return centralite(G, centralite(G, list(G.nodes)[0])[0])
