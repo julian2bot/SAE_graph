@@ -67,30 +67,30 @@ def save_graph(graph_films):
     return str(os.path.abspath(nameimg))
 
 
-def collaborateurs_communs(G, u, v):
-    if u not in G or v not in G:
+def collaborateurs_communs(G, sommet, autre_sommet):
+    if sommet not in G or autre_sommet not in G:
         return None
 
-    voisins_u = set(G.neighbors(u))
-    voisins_v = set(G.neighbors(v))
+    voisins_u = set(G.neighbors(sommet))
+    voisins_v = set(G.neighbors(autre_sommet))
     return voisins_u.intersection(voisins_v)
 
 
-def collaborateurs_proches(G,u,k):
-    """Fonction renvoyant l'ensemble des acteurs à distance au plus k de l'acteur u dans le graphe G. La fonction renvoie None si u est absent du graphe.
+def collaborateurs_proches(G,sommet,distance):
+    """Fonction renvoyant l'ensemble des acteurs à distance au plus k de l'acteur sommet dans le graphe G. La fonction renvoie None si sommet est absent du graphe.
     
     Parametres:
         G: le graphe
-        u: le sommet de départ
-        k: la distance depuis u
+        sommet: le sommet de départ
+        distance: la distance depuis sommet
     """
-    if u not in G.nodes:
-        print(u,"est un illustre inconnu")
+    if sommet not in G.nodes:
+        print(sommet,"est un illustre inconnu")
         return None
     collaborateurs = set()
-    collaborateurs.add(u)
+    collaborateurs.add(sommet)
     # print(collaborateurs)
-    for i in range(k):
+    for i in range(distance):
         collaborateurs_directs = set()
         for c in collaborateurs:
             for voisin in G.adj[c]:
@@ -100,40 +100,40 @@ def collaborateurs_proches(G,u,k):
     return collaborateurs
 
 
-def est_proche(G,u,v,k=1):
-    if u not in G or v not in G or k<=-1:
+def est_proche(G,sommet,autre_sommet,distance=1):
+    if sommet not in G or autre_sommet not in G or distance<=-1:
         return None
-    return v in collaborateurs_proches(G,u,k) 
+    return autre_sommet in collaborateurs_proches(G,sommet,distance) 
 
 
-def distance_naive(G, u, v):
-    if u not in G.nodes or v not in G.nodes:
+def distance_naive(G, sommet, autre_sommet):
+    if sommet not in G.nodes or autre_sommet not in G.nodes:
         return -1
     distance = 0
     
     while distance <100:
-        if est_proche(G, u, v, k=distance):
+        if est_proche(G, sommet, autre_sommet, k=distance):
             return distance
         distance += 1
     return -1
 
 
-# Cette fonction distance utilise BFS pour trouver la distance entre deux acteurs u et v dans un graphe G. Sa complexité est O(V + E), ce qui est plus efficace que l'approche naïve précédente.
-def distance(G, u, v):
+# Cette fonction distance utilise BFS pour trouver la distance entre deux acteurs sommet et autre_sommet dans un graphe G. Sa complexité est O(V + E), ce qui est plus efficace que l'approche naïve précédente.
+def distance(G, sommet, autre_sommet):
     # retorune distance dsitra 
     try:
-        return nx.shortest_path_length(G,u, v) # a TEST oui => 0.10
+        return nx.shortest_path_length(G,sommet, autre_sommet) # a TEST oui => 0.10
     except: return -1
 
-        # return nx.dijkstra_path_length(G,u, v) # ok mais peut mieux faire
-        # return nx.single_source_dijkstra_path_length(G, u,v) # non 
-        # return nx.floyd_warshall_numpy(G, u,v) # mais non
-        # return nx.algorithms.shortest_paths.astar(G, u,v)# a TEST => 0.09 mais non
-        # return nx.algorithms.shortest_paths.dense (G, u,v)# a TEST => 1.32 mais non
-        # return nx.algorithms.shortest_paths.generic (G, u,v)# a TEST => 1.16 mais non
-        # return nx.algorithms.shortest_paths.unweighted(G, u,v)# a TEST => 1.26 mais non
-        # return nx.algorithms.shortest_paths.unweighted(G, u,v)# a TEST => 1.15 mais non
-        # return nx.algorithms.shortest_paths.unweighted.single_source_shortest_path_length(G, u,v)# a TEST => 0.09 mais non 
+        # return nx.dijkstra_path_length(G,sommet, autre_sommet) # ok mais peut mieux faire
+        # return nx.single_source_dijkstra_path_length(G,sommet, autre_sommet)# non 
+        # return nx.floyd_warshall_numpy(G,sommet, autre_sommet) # mais non
+        # return nx.algorithms.shortest_paths.astar(G,sommet, autre_sommet)# a TEST => 0.09 mais non
+        # return nx.algorithms.shortest_paths.dense (G,sommet, autre_sommet)# a TEST => 1.32 mais non
+        # return nx.algorithms.shortest_paths.generic (G,sommet, autre_sommet)# a TEST => 1.16 mais non
+        # return nx.algorithms.shortest_paths.unweighted(G,sommet, autre_sommet)# a TEST => 1.26 mais non
+        # return nx.algorithms.shortest_paths.unweighted(G,sommet, autre_sommet)# a TEST => 1.15 mais non
+        # return nx.algorithms.shortest_paths.unweighted.single_source_shortest_path_length(G,sommet, autre_sommet)# a TEST => 0.09 mais non 
 
         # return int(nx.all_shortest_paths(G, source=u, target=v))
 
@@ -151,18 +151,18 @@ def distance(G, u, v):
 
 
 
-def centralite(G, u):
-    """ renvoie une distance entre u et le bord du graph
+def centralite(G, sommet):
+    """ renvoie une distance entre sommet et le bord du graph
 
     Args:
         G: le graphe
-        u: le sommet de départ de l'acteur
+        sommet: le sommet de départ de l'acteur
     Returns:
-        int : la centralité depuis u vers v
+        int : la centralité depuis sommet vers v
     """
-    if u not in G:
+    if sommet not in G:
         return None
-    shortest_paths = nx.single_source_dijkstra_path_length(G, u)
+    shortest_paths = nx.single_source_dijkstra_path_length(G, sommet)
     centralite_u = max(shortest_paths.values())
     return centralite_u
     # or
@@ -222,12 +222,12 @@ def arthus_sauce(G):
     depart = list(G[start].keys())[0]
     sommet_a_explorer = [depart]
     deja_vu = {depart , start}
-    teh_end = [0,depart]
+    fin = [0,depart]
     while (len(sommet_a_explorer)>0):
         noeud_courant = sommet_a_explorer.pop(0)
         dist = distance(G,depart,noeud_courant)
-        if dist > teh_end[0]:
-            teh_end = [dist,noeud_courant]
+        if dist > fin[0]:
+            fin = [dist,noeud_courant]
         # print(noeud_courant)
         for noeud in graphe[noeud_courant]:
             if noeud not in deja_vu:
@@ -236,48 +236,48 @@ def arthus_sauce(G):
 
     print("1er/2 DFS")
     # DFS depart OK
-    depart = teh_end[1]
+    depart = fin[1]
     sommet_a_explorer = [depart]
     deja_vu = {depart}
-    teh_end = [0,depart]
+    fin = [0,depart]
     while (len(sommet_a_explorer)>0):
         noeud_courant = sommet_a_explorer.pop(0)
-        if distance(G,depart,noeud_courant) > teh_end[0]:
-            teh_end = [distance(G,depart,noeud_courant),noeud_courant]
+        if distance(G,depart,noeud_courant) > fin[0]:
+            fin = [distance(G,depart,noeud_courant),noeud_courant]
         # print(noeud_courant)
         for noeud in graphe[noeud_courant]:
             if noeud not in deja_vu:
                 deja_vu.add(noeud_courant)
                 sommet_a_explorer.append(noeud)
-    return (depart,teh_end[1], distance(G,depart,teh_end[1]))
+    return (depart,fin[1], distance(G,depart,fin[1]))
 
 
 def eloignement_max(G):
     return arthus_sauce(G)
 
-def cheminer(G,u,v):
+def cheminer(G,sommet,autre_sommet):
     # return nx.dag_longest_path(G,u,v)
     """
     On suppose que l'algorithme de DFS a été effectué sur G depuis un sommet quelconque r
     """
     import heapq
-    if u not in G or v not in G:
+    if sommet not in G or autre_sommet not in G:
         return None
 
     # si il y a pas de chemin ba va te fiare
     distances = {}
     previous_nodes = {}
-    heap = [(0, u)]  # (distance jusqu'au nœud, nœud)
+    heap = [(0, sommet)]  # (distance jusqu'au nœud, nœud)
 
     while heap:
         current_distance, current_node = heapq.heappop(heap)
         # print(current_distance,current_node)
     
         # Vérifier si le nœud actuel est le nœud d'arrivée
-        if current_node == v:
+        if current_node == autre_sommet:
             path = []
             # print("entrain de faire chemin back")
-            previous_nodes[u] = None
+            previous_nodes[sommet] = None
             while current_node is not None:
                 path.append(current_node)
                 print(path)
@@ -311,10 +311,10 @@ def centre_hollywood(G,sauce):
     return ch[len(ch) // 2]
 
 
-def centralite_groupe(G,S):
-    if S not in G:
+def centralite_groupe(G,Sommets):
+    if Sommets not in G:
         return None
-    return max([centralite(G,u) for u in S])
+    return max([centralite(G,sommet) for sommet in Sommets])
 
 import gzip
 
