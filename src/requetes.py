@@ -116,13 +116,16 @@ def distance(G, u, v):
 
 # Q4
 def centralite(G,u):
-    def val(elem):
-        return len(elem[1])
-    truc = max(nx.single_source_dijkstra_path(G,u).items(), key=val)
-    print(truc)
-    return truc[1][0],truc[1][-1],len(truc[1])-1
-    # return V max, u, len btw u => v
-
+    try: 
+    
+        def val(elem):
+            return len(elem[1])
+        truc = max(nx.single_source_dijkstra_path(G,u).items(), key=val)
+        # print(truc)
+        return truc[1][0],truc[1][-1],len(truc[1])-1
+        # return V max, u, len btw u => v
+    except:
+        return None
 
 def centre_hollywood(G):
     
@@ -168,4 +171,3 @@ def collaborateurs_proches_Graph(G,u,k):
                 visiter.add(node)
                 Graph.add_edges_from([(node,x) for x in G.adj[node]])
     return Graph
-
