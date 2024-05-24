@@ -1,4 +1,5 @@
-from APIGraph import *
+from requetes import *
+import platform
 
 def main():
     quitter=False
@@ -34,7 +35,7 @@ def main():
                 acteur=input("Veuillez entrer votre acteur.\n")
                 print(centralite(G,acteur))
             case "D":
-                print(centre_hollywood(G,eloignement_max(G)))
+                print(centre_hollywood(G))
             case "E":
                 acteur1=input("Veuillez entrer le premier acteur.\n")
                 acteur2=input("Veuillez entrer le deuxième acteur.\n")
@@ -43,7 +44,15 @@ def main():
                 ensemble_acteurs=set(input("Veuiller entrer votre groupe d'acteurs en les écrivants les uns à la suite des autres.\n").split(', '))
                 print(ensemble_acteurs)
                 print(centralite_groupe(G,ensemble_acteurs))
+            case "clear":
+                print("Console clear !")
+                if platform.system() == "Windows":
+                    os.system("cls")
+                else:
+                    os.system("clear")
             case "Q":
+                print("Exit ! Fin du programme, Au revoir")
+
                 arret=True
 
 main()
