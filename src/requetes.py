@@ -32,14 +32,8 @@ def json_vers_nx(file_path2, affiche=False):
         return G
 
 # affichage du graphe :
-def affichage_graph(graph_films):
-    # pos = nx.spring_layout(graph_films)
-    # fig = plt.figure()
-    # nx.draw(graph_films, pos, with_labels=True)
-    # fig.savefig("G12.png")
-    # plt.show()
-    nx.draw(graph_films, with_labels=True)
-    # nx.draw(graph_films)
+def affichage_graph(graph_films, label = False):
+    nx.draw(graph_films, with_labels=label)
     plt.show()
 
 def save_graph(graph_films):
