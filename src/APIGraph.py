@@ -48,7 +48,7 @@ def affichage_graph(graph_films):
     plt.show()
 
 
-def save_graph(graph_films):
+def save_graph(graph_films, cheminnameimg= None):
     """Affiche le graphique passé en paramètre grâce à matplotlib et le sauvegarde sous forme d'image.
 
     Args:
@@ -56,7 +56,11 @@ def save_graph(graph_films):
     Returns:
         str: Le chemin absolu de l'image enregistrée
     """
-    nameimg = "graph.png"
+    if cheminnameimg is None:
+        nameimg = "graph.png"
+    else:
+        nameimg = cheminnameimg
+        
     pos = nx.spring_layout(graph_films)
     fig = plt.figure()
     nx.draw(graph_films, pos, with_labels=True, node_size=30,font_size=8, font_color='black' )
@@ -65,6 +69,8 @@ def save_graph(graph_films):
     print(nameimg)
     print("img!!!!!",os.path.abspath(nameimg))
     return str(os.path.abspath(nameimg))
+
+
 
 
 def collaborateurs_communs(G, u, v):
