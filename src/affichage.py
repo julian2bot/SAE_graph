@@ -2,7 +2,7 @@ import json
 import os
 import tkinter as tk
 from PIL import ImageTk, Image
-from APIGraph import *
+from requetes import *
 # import graphdocpython
 from matplotlib import pyplot as plt
 import networkx as nx
@@ -181,7 +181,7 @@ def executer_centra_hollywood():
     global G
     try:
         # Exécuter la fonction avec les données fournies
-        result = centre_hollywood(G, arthus_sauce(G))
+        result = centre_hollywood(G)
         # Afficher le résultat
         res= f"La centralité d'hollywood est dessignée à l'acteur {result} !"
     except:
@@ -205,6 +205,41 @@ def executer_eloignement_max():
         res= f"Problème, veuillez vérifier votre graph."
    
     result_label.config(text=res)
+
+def executer_centralite_groupe():
+    # RAISE a faire
+    global G
+    # Exécuter la fonction avec les données fournies
+    
+    # Afficher le résultat
+    S = actor1_entry_centralite_group.get()
+    S = S.split(", ")
+    print(S)
+    try: 
+        result = centralite_groupe(G,S)
+        res = f"Le groupe centrale est : {result}"
+
+    except:
+        res = f"Problème, veuillez vérifier votre graph."
+   
+    result_label.config(text=res)
+
+
+def affiche_sous_graph():
+    # RAISE A FAIRE
+    global G
+    try:
+        sous_graph = collaborateurs_proches_Graph(G,"Julian Marques",2)
+        affichage_graph(sous_graph) 
+        # result = collaborateurs_communs("grah", actor1_data, actor2_data)
+        
+        # le résultat dans le label
+        result_label.config(text=G)
+        
+    except:
+        return "Entrer un format valide" 
+    
+
 
 from tkinterdnd2 import DND_FILES, TkinterDnD
 
@@ -323,7 +358,7 @@ actor2_entry_commun = tk.Entry(actor_frame)
 actor2_entry_commun.pack()
 
 # Bouton "Exécuter"
-execute_button = tk.Button(left_frame, text="Acteurs commun", command=executer_collaborateurs_communs)
+execute_button = tk.Button(actor_frame, text="Acteurs commun", command=executer_collaborateurs_communs)
 execute_button.pack()
 
 """---------------------------------------------------------------"""
@@ -349,7 +384,12 @@ distance_entryproche = tk.Entry(actor_frame)
 distance_entryproche.pack()
 
 # Bouton "Exécuter"
-execute_button = tk.Button(left_frame, text="Acteurs proche", command=executer_collaborateurs_proche)
+execute_button = tk.Button(actor_frame, text="Acteurs proche", command=executer_collaborateurs_proche)
+execute_button.pack()
+
+
+# Bouton "Exécuter"
+execute_button = tk.Button(actor_frame, text="Affiché Acteurs proche", command=affiche_sous_graph)
 execute_button.pack()
 
 """---------------------------------------------------------------"""
@@ -380,7 +420,7 @@ distance_entry_estproche = tk.Entry(actor_frame)
 distance_entry_estproche.pack()
 
 # Bouton "Exécuter"
-execute_button = tk.Button(left_frame, text="est proche", command=executer_collaborateurs_estproche)
+execute_button = tk.Button(actor_frame, text="est proche", command=executer_collaborateurs_estproche)
 execute_button.pack()
 
 """---------------------------------------------------------------"""
@@ -405,7 +445,7 @@ actor2_entry_distance = tk.Entry(actor_frame)
 actor2_entry_distance.pack()
 
 # Bouton "Exécuter"
-execute_button = tk.Button(left_frame, text="Distance ", command=executer_distance)
+execute_button = tk.Button(actor_frame, text="Distance ", command=executer_distance)
 execute_button.pack()
 
 """---------------------------------------------------------------"""
@@ -427,7 +467,7 @@ actor1_entry_centralite.pack()
 
 
 # Bouton "Exécuter"
-execute_button = tk.Button(left_frame, text="centralite ", command=executer_centralite)
+execute_button = tk.Button(actor_frame, text="centralite ", command=executer_centralite)
 execute_button.pack()
 
 """---------------------------------------------------------------"""
@@ -453,9 +493,33 @@ execute_button.pack()
 """---------------------------------------------------------------"""
 # Titledpane pour les champs texte
 actor_frame = tk.LabelFrame(left_frame, text="Centralitalité hollywood")
+actor_frame.pack(padx=10, pady=10)
 
 # Bouton "Exécuter"
 execute_button = tk.Button(left_frame, text="Eloignement Max ", command=executer_eloignement_max)
+execute_button.pack()
+
+"""---------------------------------------------------------------"""
+
+
+
+
+# Partie sur la frame de actor communs + bouton execution
+"""---------------------------------------------------------------"""
+# Titledpane pour les champs texte
+actor_frame = tk.LabelFrame(left_frame, text="Centralité groupe")
+actor_frame.pack(padx=10, pady=10)
+
+# Champs texte pour actor1 et actor2
+actor1_label = tk.Label(actor_frame, text="lister des acteurs: acteur1, acteur2, ..")
+actor1_label.pack()
+actor1_entry_centralite_group = tk.Entry(actor_frame)
+actor1_entry_centralite_group.pack()
+
+
+
+# Bouton "Exécuter"
+execute_button = tk.Button(actor_frame, text="Centralité groupe ", command=executer_centralite_groupe)
 execute_button.pack()
 
 """---------------------------------------------------------------"""
