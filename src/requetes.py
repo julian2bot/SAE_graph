@@ -39,6 +39,7 @@ def json_vers_nx(file_path2, affiche=False):
     except:
         return G
 
+
 # affichage du graphe :
 def affichage_graph(graph_films, label = False):
     """Affiche le graphe avec ou sans les labels des sommets.
@@ -115,10 +116,11 @@ def collaborateurs_proches(G,u,k):
     Resultat:
         set: l'ensemble des sommets se situants à une distance au plus k du sommet u    
     """
+
+    collaborateurs = set()
     if u not in G.nodes:
         print(u,"est un illustre inconnu")
-        return None
-    collaborateurs = set()
+        return collaborateurs
     collaborateurs.add(u)
     # print(collaborateurs)
     for i in range(k):
@@ -143,8 +145,8 @@ def est_proche(G,u,v,k=1):
     Resultat:
         bool: _description_
     """
-    if u not in G or v not in G or k<=-1:
-        return None
+    # if u not in G or v not in G or k<=-1:
+    #     return None
     return v in collaborateurs_proches(G,u,k) 
 
 def distance_naive(G, u, v):
@@ -187,7 +189,10 @@ def distance(G, u, v):
 
 
 # Q4
-def centralite(G,u):
+
+ 
+
+def centralite_bis(G,u):
     """Calcule la centralite du sommet u
 
     Parametres:
@@ -208,6 +213,18 @@ def centralite(G,u):
     except:
         return None
 
+def centralite(G,u):
+    """Calcule la centralite du sommet u
+
+    Parametres:
+        G (nx.Graph): le  graphe
+        u (Any): un sommet
+
+    Resultat:
+        int: la centralite du sommet u
+    """ 
+    return centralite_bis(G,u)[2]
+
 def centre_hollywood(G):
     """Fonction qui trouve le centre du graphe
 
@@ -215,14 +232,14 @@ def centre_hollywood(G):
         G (nx.Graph): le graphe
 
     Resultat:
-        Any: le sommet au centre du graphe
+        str : le sommet au centre du graphe
     """    
     # ch = nx.single_source_dijkstra_path(G,centralite(G, centralite(G, list(G.nodes)[0])[0])[0])
     def val(elem):
         return len(elem[1])
-    ch = max(nx.single_source_dijkstra_path(G,centralite(G, list(G.nodes)[0])[0]).items(), key=val)
+    ch = max(nx.single_source_dijkstra_path(G,centralite_bis(G, list(G.nodes)[0])[0]).items(), key=val)
 
-    print("ch>>>>>",ch)
+    # print("ch>>>>>",ch)
     return ch[1][len(ch[1]) // 2] # -> centraliter(centraliter()) 
 
 # Q5
@@ -235,7 +252,7 @@ def eloignement_max(G):
     Resultat:
         int: la longueur de la chaine la plus longue du graphe
     """
-    return centralite(G, centralite(G, list(G.nodes)[0])[0])
+    return centralite_bis(G, centralite_bis(G, list(G.nodes)[0])[0])[2]
 
 # BONUS
 def centralite_groupe(G,S):
@@ -249,7 +266,7 @@ def centralite_groupe(G,S):
         Any: le sommet au centre du groupe
     """
     # return max([centralite(G,u) for u in S]) # mais la version de dessous est mieux car si un acteur de S n'existe pas ca crash donc:
-    return min([centralite(G, u) for u in S if centralite(G, u) is not None], default=None)
+    return min([centralite_bis(G, u) for u in S if centralite_bis(G, u) is not None], default=None)[0]
 
 
 # BONUS collab proche to graph
